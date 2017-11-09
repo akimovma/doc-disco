@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block css_styles %}
+
+{% endblock %}
+
+{% block content %}
+  {% load bootstrap3 %}
+  <div class="col-md-8 col-md-offset-2">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Order {{ object.name }}</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          {% if object.file_number %}
+            <div class="col-sm-4">
+              <h3>File Number</h3>
+              <p>{{ object.file_number }}</p>
+            </div>
+          {% endif %}
+          <div class="col-sm-4">
+            <h3>Case</h3>
+            <p>{{ object.case }}</p>
+          </div>
+          <div class="col-sm-4">
+            <h3>Party Name</h3>
+            <p>{{ object.party_name }}</p>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-sm-6">
+            <h3>Needed Date</h3>
+            <p>{{ object.needed_date }}</p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+{% block js %}
+
+{% endblock %}

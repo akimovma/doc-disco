@@ -1,0 +1,4 @@
+git_repo: -disco.git
+dest: /home/ubuntu/doc_disco
+virtualenv: /home/ubuntu/.env/
+version: master

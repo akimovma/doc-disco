@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block css_styles %}
+  <link rel="stylesheet" type="text/css"
+        href="http://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.4/jquery.datetimepicker.css">
+{% endblock %}
+
+{% block content %}
+  {% load bootstrap3 %}
+  {% bootstrap_messages %}
+
+  <div class="col-md-8 col-md-offset-2 panel panel-default">
+    <h3 class="text-center">Create order</h3>
+    <form class="panel-body" action="{% url 'orders:create' %}" method="post" class="form">
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      {% buttons %}
+        <button type="submit" class="btn btn-primary">
+          {% bootstrap_icon "ok" %} Create
+        </button>
+      {% endbuttons %}
+    </form>
+  </div>
+
+{% endblock %}
+{% block js %}
+  <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.4/build/jquery.datetimepicker.full.js"></script>
+
+  <script>
+      $(function () {
+          $("#id_needed_date").datetimepicker({
+              timepicker: false,
+              format: 'Y-m-d',
+              minDate: '0'
+          });
+      });
+  </script>
+
+{% endblock %}

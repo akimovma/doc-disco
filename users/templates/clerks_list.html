@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+  {% load bootstrap3 %}
+  <div class="col-md-8 col-md-offset-2 panel panel-default">
+    <div class="panel-body">
+      <div class="panel-heading">
+        <h3 class="text-center">Clerks list</h3>
+      </div>
+      <table class="table">
+        <thead>
+        <tr>
+          <th>First name</th>
+          <th>Last name</th>
+          <th>Phone</th>
+          <th>Email</th>
+          <th>Last login IP</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for clerk in clerks %}
+          <tr {% if not clerk.user.is_active %} class="bg-danger"{% endif %}>
+            <th> {{ clerk.user.first_name }}</th>
+            <th> {{ clerk.user.last_name }}</th>
+            <th> {{ clerk.phone_number|default:'-' }}</th>
+            <th>{{ clerk.user.email }}</th>
+            <th> {{ clerk.user.sessions.last.ip|default:'-' }}</th>
+            <th>
+              <a href='#' title="View Profile" aria-label="Block User">
+                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+              </a>
+              {% if clerk.user.is_active %}
+                <a href='{% url 'users:clerk_ban' clerk.user.id %}' title="Block User" aria-label="Block User">
+                  <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
+                </a>
+              {% else %}
+                <a href='{% url 'users:clerk_restore' clerk.user.id %}' title="Restore User" aria-label="Restore User">
+                  <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
+                </a>
+              {% endif %}
+            </th>
+          </tr>
+        {% endfor %}
+        </tbody>
+        {% if is_paginated %}
+          <ul class="pagination">
+            {% if page_obj.has_previous %}
+              <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+              <li class="disabled"><span>&laquo;</span></li>
+            {% endif %}
+            {% for i in paginator.page_range %}
+              {% if page_obj.number == i %}
+                <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+              {% else %}
+                <li><a href="?page={{ i }}">{{ i }}</a></li>
+              {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+              <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+            {% else %}
+              <li class="disabled"><span>&raquo;</span></li>
+            {% endif %}
+          </ul>
+        {% endif %}
+    </div>
+  </div>
+{% endblock %}

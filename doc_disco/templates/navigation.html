@@ -1,0 +1,55 @@
+{% load bootstrap3 %}
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="{% url 'dashboard' %}">Doc Disco</a>
+    </div>
+    <ul class="nav navbar-nav">
+      {% if user.is_authenticated %}
+        <li {% if request.resolver_match.url_name == 'dashboard' %}class="active"{% endif %}>
+          <a href="{% url 'dashboard' %}">Dashboard</a>
+        </li>
+        {% if user.is_customer %}
+          <li {% if request.resolver_match.url_name == 'create' %}class="active"{% endif %}>
+            <a href="{% url 'orders:create' %}">Create Order</a>
+          </li>
+        {% endif %}
+        {% if user.is_head_clerk %}
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+               aria-expanded="false">Clerks <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="{% url 'users:create_clerk' %}">Create account</a></li>
+              <li><a href="{% url 'users:clerk_list' %}">Clerks list</a></li>
+            </ul>
+          </li>
+
+        {% endif %}
+        {% if user.is_clerk %}
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+               aria-expanded="false">Orders <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="?status=0">Orders to Fill</a></li>
+              <li><a href="?status=1">Orders in Progress</a></li>
+              <li><a href="?status=2">Completed Orders</a></li>
+              <li role="separator" class="divider"></li>
+              <li><a href="#">Offsite Orders</a></li>
+            </ul>
+          </li>
+        {% endif %}
+      {% endif %}
+
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'users:profile_dashboard' %}">Profile</a></li>
+        <li><a href="{% url 'users:logout' %}">Logout</a></li>
+      {% else %}
+        <li><a href="{% url 'users:login' %}">Login</a></li>
+        <li><a href="{% url 'users:register' %}">Sign Up</a></li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>

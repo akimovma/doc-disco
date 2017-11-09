@@ -1,0 +1,64 @@
+hosts: "{{target_host | default('default')}}"
+vars_files:
+	- ./vars.yml
+remote_user: user
+
+tasks:
+	- name: initial install
+  	  become: true
+  	  apt: name={{item}} state=installed
+      with_items:
+        - nginx
+        - python-virtualenv
+        - git
+        - python-pip
+        - python3
+        - python3-dev
+        - libpq-dev
+        - supervisord
+    -tags:
+    	- system
+
+  	- name: clone repo
+  	  git:
+  	  	repo={{ git_repo }}
+  	  	dest={{ dest }}
+  	  	version={{ version }}
+
+  	- name: install requirements
+  	  pip:
+  	  	requirements=requirements.txt
+  	  	virtualenv={{ virtualenv }}
+  	  	chdir={{ dest }}
+
+  	- name: migrations
+  		django_manage:
+  		  command={{item}}
+  		  with_items:
+  		    - makemigrations
+  		    - migrate
+  		  app_path={{ dest }}
+  		  virtualenv={{ virtualenv }}
+
+    - name: install fixtures
+        django_manage:
+          command=loaddata
+          fixtures={{item}}
+          with_items:
+            - email-templates
+          app_path={{ dest }}
+  		  virtualenv={{ virtualenv }}
+
+    - name: supervisor start
+      service:
+        name=supervisord
+        state=restarted
+      become=true
+
+    - name: nginx restart
+      service:
+        name:nginx
+        state:restarted
+      become:true
+
+
